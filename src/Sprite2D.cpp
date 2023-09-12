@@ -28,10 +28,20 @@ Sprite2D::Sprite2D(const char* texture_path, unsigned int rows, unsigned int col
     SetOrigin(O_TOP_LEFT);
 }
 
+void Sprite2D::Draw()
+{
+    _Draw(position);
+}
+
 void Sprite2D::SelectRect(unsigned int row, unsigned int column)
 {
     ccol = column * rect_width;
     crow = (row-1)*rect_height;
+}
+
+void Sprite2D::DrawRectAt(unsigned int row, unsigned int column, Vector2 position)
+{
+    _Draw(position,(row-1)*rect_height,column * rect_width);
 }
 
 void Sprite2D::SetAnimation(Animation anim, unsigned int speed)
@@ -96,9 +106,15 @@ Rectangle Sprite2D::GetRect()
 {
     return d_rect;
 }
-void Sprite2D::Draw()
+
+void Sprite2D::_Draw(Vector2 _position,int _crow,int _ccol)
 {
-    
+    if (_crow == -1 || _ccol == -1)
+    {
+        _crow = crow;
+        _ccol = ccol;
+    }
+
     if (animation.frames > 1 && anim_playing) // has animation
     {
         frame_count++;
@@ -115,9 +131,18 @@ void Sprite2D::Draw()
             crow = rect_height * (animation.row-1);
         }
     }
-    Rectangle s_rect = Rectangle{(float)ccol, (float)crow, (flipped_h ? -(float)rect_width : (float)rect_width), (flipped_v ? -(float)rect_height : (float)rect_height)};
+    Rectangle s_rect;
+    if (_crow != -1 && _ccol != -1)
+    {
+        s_rect = Rectangle{(float)_ccol, (float)_crow, (flipped_h ? -(float)rect_width : (float)rect_width), (flipped_v ? -(float)rect_height : (float)rect_height)};
+    }
+    else
+    {
+        s_rect = Rectangle{(float)ccol, (float)crow, (flipped_h ? -(float)rect_width : (float)rect_width), (flipped_v ? -(float)rect_height : (float)rect_height)};
+    }
+    
 
-    d_rect = Rectangle{position.x, position.y, rect_width * scale.x, rect_height * scale.y};
+    d_rect = Rectangle{_position.x, _position.y, rect_width * scale.x, rect_height * scale.y};
 
     DrawTexturePro(texture, s_rect, d_rect, origin, rotation, WHITE);
 

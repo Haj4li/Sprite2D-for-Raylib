@@ -40,6 +40,8 @@ class Sprite2D
         unsigned int frame_count = 0;
         bool anim_playing = false;
 
+        void _Draw(Vector2 _position,int _crow = -1,int _ccol = -1);
+
         
     public:
         // Variables
@@ -70,6 +72,9 @@ class Sprite2D
             If your texture is a tilemap or spritesheet you can select a part of it to be drawn
         */
         void SelectRect(unsigned int row, unsigned int column);
+        
+        void DrawRectAt(unsigned int row, unsigned int column,Vector2 position);
+
         /*
             You can set the main animation of the sprite and the speed of animation playing
         */

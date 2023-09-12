@@ -135,7 +135,6 @@ int main() {
 
         healtBar.Draw();
 
-
         EndDrawing();
     }
     CloseWindow();
