@@ -1,3 +1,6 @@
+#ifndef SPRITE_H
+#define SPRITE_H
+
 #include <raylib.h>
 
 struct Animation
@@ -5,7 +8,8 @@ struct Animation
     unsigned int frames;
     unsigned int start_frame;
     unsigned int row;
-    Animation(unsigned int frames=1, unsigned int start_frame=1, unsigned int row=1);
+    bool loop;
+    Animation(unsigned int frames=1, unsigned int start_frame=1, unsigned int row=1,bool loop = false);
 };
 
 enum Origins {
@@ -25,7 +29,9 @@ class Sprite2D
     private:
         Texture2D texture;
 
-        unsigned int rect_width,rect_height;
+        Origins current_origin;
+
+        float rect_width,rect_height;
         Rectangle d_rect;
         unsigned int rows,cols;
         unsigned int crow,ccol;
@@ -42,12 +48,17 @@ class Sprite2D
 
         void _Draw(Vector2 _position,int _crow = -1,int _ccol = -1);
 
+        bool loadedByTexture = false;
+
+        double initTime = 0;
+
         
     public:
         // Variables
         Vector2 position;
         Vector2 scale;
         float rotation = 0;
+        float alpha = 255;
 
 
         // Functions
@@ -57,7 +68,13 @@ class Sprite2D
             if your texture is not a tilemap or spritesheet leave the two other parameters undefined
             else please define the total rows and columns of the texture
         */
+        Sprite2D();
+        void LoadSprite(Texture2D texture, unsigned int rows = 1, unsigned int cols = 1);
+        void LoadSprite(const char* texture_path, unsigned int rows = 1, unsigned int cols = 1);
         Sprite2D(const char* texture_path, unsigned int rows = 1, unsigned int cols = 1);
+
+        double GetInitTime();
+
         /*
             This function simply draw the texture on the screen
             you have to call this function between the BeginDrawing & EndDrawing
@@ -83,6 +100,7 @@ class Sprite2D
             You can pause or play the animation with this function
         */
         void AnimationPlay(bool play);
+        bool IsAnimationPlaying();
 
         ~Sprite2D();
 
@@ -116,4 +134,4 @@ class Sprite2D
 
 
 
-
+#endif
